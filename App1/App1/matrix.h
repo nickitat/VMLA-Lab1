@@ -15,6 +15,7 @@ public:
 	void operator=(const matrix& other);
 	matrix operator+(const matrix& other);
 	matrix operator*(const matrix& other);
+	matrix operator*(const double alpha);
 
 	matrix LU_decomposition();
 
@@ -72,6 +73,16 @@ matrix matrix::operator+(const matrix& other) {
 	return Res;
 }
 
+matrix matrix::operator*(const double alpha) {
+	matrix Res(rows, columns);
+	for (size_t i = 0; i < rows; ++i) {
+		for (size_t j = 0; j < columns; ++j) {
+			Res[i][j] *= alpha;
+		}
+	}
+	return Res;
+}
+
 matrix matrix::operator*(const matrix& other) {
 	//if (columns != other.rows) {
 	//
@@ -121,17 +132,17 @@ matrix matrix::LU_decomposition() {
 		}
 	}
 	/*for (int a = 0; a < n; ++a) {
-		for (int b = 0; b < n; ++b) {
-			cout << L[a][b] << " ";
-		}
-		cout << endl;
+	for (int b = 0; b < n; ++b) {
+	cout << L[a][b] << " ";
+	}
+	cout << endl;
 	}
 	cout << endl;
 	for (int a = 0; a < n; ++a) {
-		for (int b = 0; b < n; ++b) {
-			cout << U[a][b] << " ";
-		}
-		cout << endl;
+	for (int b = 0; b < n; ++b) {
+	cout << U[a][b] << " ";
+	}
+	cout << endl;
 	}
 	cout << endl;*/
 	for (int i = 0; i < n; ++i) {
