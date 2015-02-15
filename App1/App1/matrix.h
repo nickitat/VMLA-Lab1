@@ -102,19 +102,6 @@ matrix matrix::LU_decomposition() {
 		L[i][i] = 1;
 	}
 	for (int i = 1; i < n; ++i) {
-		/*for (int a = 0; a < n; ++a) {
-		for (int b = 0; b < n; ++b) {
-		cout << L[a][b] << " ";
-		}
-		cout << endl;
-		}
-		for (int a = 0; a < n; ++a) {
-		for (int b = 0; b < n; ++b) {
-		cout << U[a][b] << " ";
-		}
-		cout << endl;
-		}
-		cout << endl;*/
 		for (int j = 1; j < n; ++j) {
 			if (j < i) {
 				L[i][j] = data[i][j];
@@ -133,7 +120,7 @@ matrix matrix::LU_decomposition() {
 			}
 		}
 	}
-	for (int a = 0; a < n; ++a) {
+	/*for (int a = 0; a < n; ++a) {
 		for (int b = 0; b < n; ++b) {
 			cout << L[a][b] << " ";
 		}
@@ -146,7 +133,7 @@ matrix matrix::LU_decomposition() {
 		}
 		cout << endl;
 	}
-	cout << endl;
+	cout << endl;*/
 	for (int i = 0; i < n; ++i) {
 		for (int j = i; j < n; ++j) {
 			L[i][j] = U[i][j];
