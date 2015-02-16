@@ -36,7 +36,7 @@ int main() {
 	cout << endl;
 	}
 	calculation::SLAE_solve::LU_method(A, A);*/
-	matrix L(4, 4);
+	/*matrix L(4, 4);
 	L[0][0] = 1;
 	L[0][1] = 0;
 	L[0][2] = 0;
@@ -58,7 +58,21 @@ int main() {
 	b[1][0] = 5;
 	b[2][0] = 6;
 	b[3][0] = 6;
-	matrix x = calculation::SLAE_solve::straight_substitution(L, b);
+	matrix x = calculation::SLAE_solve::straight_substitution(L, b);*/
+	matrix U(4, 4);
+	for (int i = 0; i < 4; ++i) {
+		for (int j = i; j < 4; ++j) {
+			U[i][j] = rand() % 10;
+			cout << U[i][j] << " ";
+		}
+		cout << endl;
+	}
+	matrix b(4, 1);
+	b[0][0] = 12;
+	b[1][0] = 7;
+	b[2][0] = 3;
+	b[3][0] = -2;
+	matrix x = calculation::SLAE_solve::back_substitution(U, b);
 	for (int i = 0; i < 4; ++i) {
 		cout << x[i][0] << endl;
 	}

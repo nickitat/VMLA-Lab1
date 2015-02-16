@@ -1,9 +1,15 @@
 #include "calculation.h"
 
 matrix calculation::SLAE_solve::back_substitution(const matrix& U, const matrix& b) {
-	matrix A(1, 1);
-
-	return A;
+	matrix x(U.columns, 1);
+	for (int i = x.rows - 1; i >= 0; --i) {
+		x[i][0] = b[i][0];
+		for (int j = i + 1; j < U.columns; ++j) {
+			x[i][0] -= U[i][j] * x[j][0];
+		}
+		x[i][0] /= U[i][i];
+	}
+	return x;
 }
 
 matrix calculation::SLAE_solve::straight_substitution(const matrix& L, const matrix& b) {
