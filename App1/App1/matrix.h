@@ -17,7 +17,7 @@ public:
 	matrix operator*(const matrix& other);
 	matrix operator*(const double alpha);
 
-	matrix LU_decomposition();
+	matrix LU_decomposition() const;
 
 	//private:
 
@@ -99,7 +99,7 @@ matrix matrix::operator*(const matrix& other) {
 	return Res;
 }
 
-matrix matrix::LU_decomposition() {
+matrix matrix::LU_decomposition() const {
 	//if (rows != columns) {
 	//
 	//}

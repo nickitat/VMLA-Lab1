@@ -10,6 +10,7 @@
 using namespace std;
 
 #include "matrix.h"
+#include "calculation.h"
 
 int main() {
 	freopen("input.in", "r", stdin);
@@ -34,5 +35,6 @@ int main() {
 		}
 		cout << endl;
 	}
+	calculation::SLAE_solve::LU_method(A, A);
 	return 0;
 }
