@@ -6,12 +6,18 @@
 class calculation {
 public:
 
-	class SLAE_solve {
+	class SLAE {
 	public:
 
 		static matrix back_substitution(const matrix& U, const matrix& b);
 		static matrix straight_substitution(const matrix& L, const matrix& b);
 		static matrix LU_method(const matrix& A, const matrix& b);
+	};
+
+	class inverse_matrix {
+	public:
+
+		static matrix LU_method(const matrix& A);
 	};
 
 };

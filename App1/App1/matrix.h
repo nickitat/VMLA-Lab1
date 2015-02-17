@@ -7,7 +7,7 @@ using std::vector;
 class matrix {
 public:
 
-	typedef double _Type;
+	typedef long double _Type;
 
 	matrix(int columns, int rows);
 	matrix(const matrix& other);

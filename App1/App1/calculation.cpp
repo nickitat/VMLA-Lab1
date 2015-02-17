@@ -1,6 +1,6 @@
 #include "calculation.h"
 
-matrix calculation::SLAE_solve::back_substitution(const matrix& U, const matrix& b) {
+matrix calculation::SLAE::back_substitution(const matrix& U, const matrix& b) {
 	matrix x(U.columns, 1);
 	for (int i = x.rows - 1; i >= 0; --i) {
 		x[i][0] = b[i][0];
@@ -12,7 +12,7 @@ matrix calculation::SLAE_solve::back_substitution(const matrix& U, const matrix&
 	return x;
 }
 
-matrix calculation::SLAE_solve::straight_substitution(const matrix& L, const matrix& b) {
+matrix calculation::SLAE::straight_substitution(const matrix& L, const matrix& b) {
 	matrix x(L.columns, 1);
 	for (int i = 0; i < x.rows; ++i) {
 		x[i][0] = b[i][0];
@@ -24,7 +24,7 @@ matrix calculation::SLAE_solve::straight_substitution(const matrix& L, const mat
 	return x;
 }
 
-matrix calculation::SLAE_solve::LU_method(const matrix& A, const matrix& b) {
+matrix calculation::SLAE::LU_method(const matrix& A, const matrix& b) {
 	matrix LU = A.LU_decomposition();
 	matrix L(LU.rows, LU.columns), U(LU.rows, LU.columns);
 	for (int i = 0; i < LU.rows; ++i) {
@@ -43,3 +43,7 @@ matrix calculation::SLAE_solve::LU_method(const matrix& A, const matrix& b) {
 	matrix x = back_substitution(U, y);
 	return x;
 }
+
+//matrix calculation::inverse_matrix::LU_method(const matrix& A) {
+//
+//}

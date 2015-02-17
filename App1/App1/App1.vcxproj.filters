@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Файлы ресурсов\Testing">
+      <UniqueIdentifier>{94f54d10-050a-4147-ba32-abde6fdd5c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы ресурсов\Testing\LU">
+      <UniqueIdentifier>{664df7f3-37ba-4cee-ab94-665f161128ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,6 +45,12 @@
     </ClInclude>
     <ClInclude Include="calculation.h">
       <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="SLAE_solve.h">
+      <Filter>Файлы ресурсов\Testing\LU</Filter>
+    </ClInclude>
+    <ClInclude Include="inverse_matrix.h">
+      <Filter>Файлы ресурсов\Testing\LU</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

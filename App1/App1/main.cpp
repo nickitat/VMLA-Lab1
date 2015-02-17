@@ -1,8 +1,10 @@
 #define  _CRT_SECURE_NO_WARNINGS
 
 #include <algorithm>
+#include <cassert>
 #include <cctype>
 #include <cmath>
+#include <ctime>
 #include <iostream>
 #include <utility>
 #include <vector>
@@ -11,29 +13,44 @@ using namespace std;
 
 #include "matrix.h"
 #include "calculation.h"
+#include "SLAE_solve.h"
 
 int main() {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
-	/*matrix A(4, 4);
+	assert(50 == test_SLAE::test(50, 1e-5));
+	/*srand(time(nullptr));
+	matrix A(4, 4), b(4, 1);
 	for (int i = 0; i < 4; ++i) {
-	for (int j = 0; j < 4; ++j) {
-	A[i][j] = rand() % 20 - 8;
+		for (int j = 0; j < 4; ++j) {
+			A[i][j] = rand() % 20 - 8;
+		}
 	}
+	for (int i = 0; i < 4; ++i) {
+		b[i][0] = rand() % 20 - 5;
 	}
 	for (int i = 0; i < A.rows; ++i) {
-	for (int j = 0; j < A.columns; ++j) {
-	cout << A[i][j] << " ";
+		for (int j = 0; j < A.columns; ++j) {
+			cout << A[i][j] << " ";
+		}
+		cout << endl;
 	}
 	cout << endl;
+	for (int i = 0; i < 4; ++i) {
+		cout << b[i][0] << " ";
 	}
 	cout << endl;
-	matrix LU = A.LU_decomposition();
+	matrix x = calculation::SLAE_solve::LU_method(A, b);
+	for (int i = 0; i < 4; ++i) {
+		cout << x[i][0] << " ";
+	}
+	cout << endl;*/
+	/*matrix LU = A.LU_decomposition();
 	for (int i = 0; i < LU.rows; ++i) {
-	for (int j = 0; j < LU.columns; ++j) {
-	printf("% 4.5Lf ", LU[i][j]);
-	}
-	cout << endl;
+		for (int j = 0; j < LU.columns; ++j) {
+			printf("% 4.5Lf ", LU[i][j]);
+		}
+		cout << endl;
 	}
 	calculation::SLAE_solve::LU_method(A, A);*/
 	/*matrix L(4, 4);
@@ -59,13 +76,13 @@ int main() {
 	b[2][0] = 6;
 	b[3][0] = 6;
 	matrix x = calculation::SLAE_solve::straight_substitution(L, b);*/
-	matrix U(4, 4);
+	/*matrix U(4, 4);
 	for (int i = 0; i < 4; ++i) {
-		for (int j = i; j < 4; ++j) {
-			U[i][j] = rand() % 10;
-			cout << U[i][j] << " ";
-		}
-		cout << endl;
+	for (int j = i; j < 4; ++j) {
+	U[i][j] = rand() % 10;
+	cout << U[i][j] << " ";
+	}
+	cout << endl;
 	}
 	matrix b(4, 1);
 	b[0][0] = 12;
@@ -74,7 +91,8 @@ int main() {
 	b[3][0] = -2;
 	matrix x = calculation::SLAE_solve::back_substitution(U, b);
 	for (int i = 0; i < 4; ++i) {
-		cout << x[i][0] << endl;
-	}
+	cout << x[i][0] << endl;
+	}*/
+
 	return 0;
 }
