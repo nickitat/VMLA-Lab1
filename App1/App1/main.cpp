@@ -14,43 +14,48 @@ using namespace std;
 #include "matrix.h"
 #include "calculation.h"
 #include "SLAE_solve.h"
+#include "inverse_matrix.h"
 
 int main() {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
+
 	assert(50 == test_SLAE::test(50, 1e-5));
+
+	assert(50 == test_inverse_matrix::test(50, 1e-5));
+
 	/*srand(time(nullptr));
 	matrix A(4, 4), b(4, 1);
 	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			A[i][j] = rand() % 20 - 8;
-		}
+	for (int j = 0; j < 4; ++j) {
+	A[i][j] = rand() % 20 - 8;
+	}
 	}
 	for (int i = 0; i < 4; ++i) {
-		b[i][0] = rand() % 20 - 5;
+	b[i][0] = rand() % 20 - 5;
 	}
 	for (int i = 0; i < A.rows; ++i) {
-		for (int j = 0; j < A.columns; ++j) {
-			cout << A[i][j] << " ";
-		}
-		cout << endl;
+	for (int j = 0; j < A.columns; ++j) {
+	cout << A[i][j] << " ";
+	}
+	cout << endl;
 	}
 	cout << endl;
 	for (int i = 0; i < 4; ++i) {
-		cout << b[i][0] << " ";
+	cout << b[i][0] << " ";
 	}
 	cout << endl;
 	matrix x = calculation::SLAE_solve::LU_method(A, b);
 	for (int i = 0; i < 4; ++i) {
-		cout << x[i][0] << " ";
+	cout << x[i][0] << " ";
 	}
 	cout << endl;*/
 	/*matrix LU = A.LU_decomposition();
 	for (int i = 0; i < LU.rows; ++i) {
-		for (int j = 0; j < LU.columns; ++j) {
-			printf("% 4.5Lf ", LU[i][j]);
-		}
-		cout << endl;
+	for (int j = 0; j < LU.columns; ++j) {
+	printf("% 4.5Lf ", LU[i][j]);
+	}
+	cout << endl;
 	}
 	calculation::SLAE_solve::LU_method(A, A);*/
 	/*matrix L(4, 4);
@@ -93,6 +98,5 @@ int main() {
 	for (int i = 0; i < 4; ++i) {
 	cout << x[i][0] << endl;
 	}*/
-
 	return 0;
 }

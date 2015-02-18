@@ -44,6 +44,18 @@ matrix calculation::SLAE::LU_method(const matrix& A, const matrix& b) {
 	return x;
 }
 
-//matrix calculation::inverse_matrix::LU_method(const matrix& A) {
-//
-//}
+matrix calculation::inverse_matrix::LU_method(const matrix& A) {
+	//if (A.rows != A.columns) {
+	//
+	//}
+	matrix A_inverse(A.rows, A.columns);
+	for (int i = 0; i < A.rows; ++i) {
+		matrix b(A.rows, 1);
+		b[i][0] = 1;
+		matrix new_column = calculation::SLAE::LU_method(A, b);
+		for (int j = 0; j < A.columns; ++j) {
+			A_inverse[j][i] = new_column[j][0];
+		}
+	}
+	return A_inverse;
+}

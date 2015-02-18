@@ -9,7 +9,7 @@ public:
 
 	typedef long double _Type;
 
-	matrix(int columns, int rows);
+	matrix(int rows, int columns);
 	matrix(const matrix& other);
 	~matrix();
 
