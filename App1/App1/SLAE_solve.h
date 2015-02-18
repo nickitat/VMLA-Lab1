@@ -37,13 +37,7 @@ bool test_SLAE::random_test() {
 	}
 	matrix x = calculation::SLAE::LU_method(A, b);
 	matrix b0 = A * x;
-	/*for (int i = 0; i < n; ++i) {
-		if (fabsl(b0[i][0] - b[i][0]) > 1e-5) {
-			return false;
-		}
-	}*/
 	return b0 == b;
-	//return true;
 }
 
 #endif/*__TEST_SLAE_SOLVE_H__*/

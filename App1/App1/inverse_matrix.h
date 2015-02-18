@@ -29,8 +29,8 @@ bool test_inverse_matrix::random_test() {
 	srand(time(nullptr));
 	int n = rand() % 10 + 1;
 	matrix A(n, n), E(n, n);
-	for (int i = 0; i < A.rows; ++i) {
-		for (int j = 0; j < A.columns; ++j) {
+	for (int i = 0; i < A.rows(); ++i) {
+		for (int j = 0; j < A.columns(); ++j) {
 			A[i][j] = rand() % 20 - 8;
 		}
 	}
@@ -47,22 +47,7 @@ bool test_inverse_matrix::random_test() {
 	matrix A_inv = calculation::inverse_matrix::LU_method(A);
 	matrix E0 = A * A_inv;
 	matrix E1 = A_inv * A;
-	/*for (int i = 0; i < E0.rows; ++i) {
-		for (int j = 0; j < E0.columns; ++j) {
-			if (i != j) {
-				if (fabsl(E0[i][j]) > 1e-5 || fabsl(E1[i][j]) > 1e-5) {
-					return false;
-				}
-			}
-			else {
-				if (fabsl(E0[i][j] - 1) > 1e-5 || fabsl(E1[i][j] - 1) > 1e-5) {
-					return false;
-				}
-			}
-		}
-	}*/
 	return E0 == E && E1 == E;
-	//return true;
 }
 
 #endif/*_TEST_INVERSE_MATRIX__*/

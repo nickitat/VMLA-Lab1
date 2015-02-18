@@ -1,19 +1,19 @@
 #include "matrix.h"
 #include <cassert>
-
+#include <ostream>
 #include <iostream>
 
-matrix::matrix(int rows, int columns)
-	: rows(rows), columns(columns)
+matrix::matrix(int m_rows, int m_columns)
+	: m_rows(m_rows), m_columns(m_columns)
 {
-	data.assign(rows, vector<_Type>(columns));
+	data.assign(m_rows, vector<_Type>(m_columns));
 }
 
 matrix::matrix(const matrix& other)
-	: rows(other.rows), columns(other.columns)
+	: m_rows(other.m_rows), m_columns(other.m_columns)
 {
-	data.resize(rows);
-	for (size_t i = 0; i < rows; ++i) {
+	data.resize(m_rows);
+	for (size_t i = 0; i < m_rows; ++i) {
 		data[i].assign(other.data[i].begin(), other.data[i].end());
 	}
 }
@@ -25,11 +25,29 @@ matrix::~matrix() {
 	data.clear();
 }
 
+vector<matrix::_Type> matrix::get_row(size_t i) const {
+	//if (i >= m_rows) {
+	//
+	//}
+	return data[i];
+}
+
+vector<matrix::_Type> matrix::get_column(size_t j) const {
+	//if (j >= m_columns) {
+	//
+	//}
+	vector<_Type> ret(m_rows);
+	for (int i = 0; i < m_rows; ++i) {
+		ret[i] = data[i][j];
+	}
+	return ret;
+}
+
 void matrix::operator=(const matrix& other) {
-	rows = other.rows;
-	columns = other.columns;
-	data.resize(rows);
-	for (size_t i = 0; i < rows; ++i) {
+	m_rows = other.m_rows;
+	m_columns = other.m_columns;
+	data.resize(m_rows);
+	for (size_t i = 0; i < m_rows; ++i) {
 		data[i].assign(other.data[i].begin(), other.data[i].end());
 	}
 }
@@ -43,12 +61,12 @@ const vector<matrix::_Type>& matrix::operator[](size_t i) const {
 }
 
 matrix matrix::operator+(const matrix& other) {
-	//if (rows != other.rows || columns != other.columns) {
+	//if (m_rows != other.m_rows || m_columns != other.m_columns) {
 	//
 	//}
-	matrix Res(rows, columns);
-	for (size_t i = 0; i < rows; ++i) {
-		for (size_t j = 0; j < columns; ++j) {
+	matrix Res(m_rows, m_columns);
+	for (size_t i = 0; i < m_rows; ++i) {
+		for (size_t j = 0; j < m_columns; ++j) {
 			Res[i][j] = data[i][j] + other.data[i][j];
 		}
 	}
@@ -56,9 +74,9 @@ matrix matrix::operator+(const matrix& other) {
 }
 
 matrix matrix::operator*(const double alpha) {
-	matrix Res(rows, columns);
-	for (size_t i = 0; i < rows; ++i) {
-		for (size_t j = 0; j < columns; ++j) {
+	matrix Res(m_rows, m_columns);
+	for (size_t i = 0; i < m_rows; ++i) {
+		for (size_t j = 0; j < m_columns; ++j) {
 			Res[i][j] *= alpha;
 		}
 	}
@@ -66,14 +84,14 @@ matrix matrix::operator*(const double alpha) {
 }
 
 matrix matrix::operator*(const matrix& other) {
-	//if (columns != other.rows) {
+	//if (m_columns != other.m_rows) {
 	//
 	//}
-	matrix Res(rows, other.columns);
-	for (size_t i = 0; i < Res.rows; ++i) {
-		for (size_t j = 0; j < Res.columns; ++j) {
+	matrix Res(m_rows, other.m_columns);
+	for (size_t i = 0; i < Res.m_rows; ++i) {
+		for (size_t j = 0; j < Res.m_columns; ++j) {
 			Res[i][j] = 0;
-			for (size_t k = 0; k < columns; ++k) {
+			for (size_t k = 0; k < m_columns; ++k) {
 				Res[i][j] += data[i][k] * other.data[k][j];
 			}
 		}
@@ -81,52 +99,37 @@ matrix matrix::operator*(const matrix& other) {
 	return Res;
 }
 
-bool matrix::operator==(matrix& other) {
-	if (rows != other.rows || columns != other.columns) {
+bool matrix::operator==(const matrix& other) {
+	if (m_rows != other.m_rows || m_columns != other.m_columns) {
 		return false;
 	}
 	const long double precission = 1e-5;
-	assert(rows > 0);
-	assert(columns > 0);
-	assert(other.rows > 0);
-	assert(other.columns > 0);
-	for (int i = 0; i < rows; ++i) {
-		for (int j = 0; j < columns; ++j) {
-			//std::cout << "fuck!!!!!!!!!!!" << std::endl;
+	for (int i = 0; i < m_rows; ++i) {
+		for (int j = 0; j < m_columns; ++j) {
 			if (fabsl(data[i][j] - other.data[i][j]) > precission) {
 				return false;
 			}
 		}
 	}
-	//std::cout << 1 << std::endl;
 	return true;
 }
 
-bool matrix::operator==(const matrix& other) {
-	if (rows != other.rows || columns != other.columns) {
-		return false;
-	}
-	const long double precission = 1e-5;
-	assert(rows > 0);
-	assert(columns > 0);
-	assert(other.rows > 0);
-	assert(other.columns > 0);
-	for (int i = 0; i < rows; ++i) {
-		for (int j = 0; j < columns; ++j) {
-			if (fabsl(data[i][j] - other.data[i][j]) > precission) {
-				return false;
-			}
+std::ostream& operator<<(std::ostream& os, const matrix& A) {
+	for (int i = 0; i < A.m_rows; ++i) {
+		for (int j = 0; j < A.m_columns; ++j) {
+			os << (fabsl(A[i][j]) > 1e-5 ? A[i][j] : 0) << " ";
 		}
+		os << std::endl;
 	}
-	//std::cout << 1 << std::endl;
-	return true;
+	return os;
 }
+
 
 matrix matrix::LU_decomposition() const {
-	//if (rows != columns) {
+	//if (m_rows != m_columns) {
 	//
 	//}
-	size_t n = rows;
+	size_t n = m_rows;
 	matrix L(n, n), U(n, n);
 	for (int i = 0; i < n; ++i) {
 		U[0][i] = data[0][i];
@@ -154,20 +157,6 @@ matrix matrix::LU_decomposition() const {
 			}
 		}
 	}
-	/*for (int a = 0; a < n; ++a) {
-	for (int b = 0; b < n; ++b) {
-	cout << L[a][b] << " ";
-	}
-	cout << endl;
-	}
-	cout << endl;
-	for (int a = 0; a < n; ++a) {
-	for (int b = 0; b < n; ++b) {
-	cout << U[a][b] << " ";
-	}
-	cout << endl;
-	}
-	cout << endl;*/
 	for (int i = 0; i < n; ++i) {
 		for (int j = i; j < n; ++j) {
 			L[i][j] = U[i][j];

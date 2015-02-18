@@ -1,61 +1,64 @@
 #include "calculation.h"
 
-matrix calculation::SLAE::back_substitution(const matrix& U, const matrix& b) {
-	matrix x(U.columns, 1);
-	for (int i = x.rows - 1; i >= 0; --i) {
-		x[i][0] = b[i][0];
-		for (int j = i + 1; j < U.columns; ++j) {
-			x[i][0] -= U[i][j] * x[j][0];
+vector<matrix::_Type> calculation::SLAE::back_substitution(const matrix& U, const vector<matrix::_Type>& b) {
+	vector<matrix::_Type> x(U.columns());
+	for (int i = x.size() - 1; i >= 0; --i) {
+		x[i] = b[i];
+		for (int j = i + 1; j < U.columns(); ++j) {
+			x[i] -= U[i][j] * x[j];
 		}
-		x[i][0] /= U[i][i];
+		x[i] /= U[i][i];
 	}
 	return x;
 }
 
-matrix calculation::SLAE::straight_substitution(const matrix& L, const matrix& b) {
-	matrix x(L.columns, 1);
-	for (int i = 0; i < x.rows; ++i) {
-		x[i][0] = b[i][0];
+vector<matrix::_Type> calculation::SLAE::straight_substitution(const matrix& L, const vector<matrix::_Type>& b) {
+	vector<matrix::_Type> x(L.columns());
+	for (int i = 0; i < x.size(); ++i) {
+		x[i] = b[i];
 		for (int j = 0; j < i; ++j) {
-			x[i][0] -= L[i][j] * x[j][0];
+			x[i] -= L[i][j] * x[j];
 		}
-		x[i][0] /= L[i][i];
+		x[i] /= L[i][i];
 	}
 	return x;
 }
 
 matrix calculation::SLAE::LU_method(const matrix& A, const matrix& b) {
 	matrix LU = A.LU_decomposition();
-	matrix L(LU.rows, LU.columns), U(LU.rows, LU.columns);
-	for (int i = 0; i < LU.rows; ++i) {
+	matrix L(LU.rows(), LU.columns()), U(LU.rows(), LU.columns());
+	for (int i = 0; i < LU.rows(); ++i) {
 		for (int j = 0; j < i; ++j) {
 			L[i][j] = LU[i][j];
 		}
 		L[i][i] = 1;
 	}
-	for (int i = 0; i < LU.columns; ++i) {
-		for (int j = i; j < LU.columns; ++j) {
+	for (int i = 0; i < LU.columns(); ++i) {
+		for (int j = i; j < LU.columns(); ++j) {
 			U[i][j] = LU[i][j];
 		}
 	}
 	//LU.~~matrix();
-	matrix y = straight_substitution(L, b);
-	matrix x = back_substitution(U, y);
-	return x;
+	matrix X(A.columns(), b.columns());
+	for (int i = 0; i < b.columns(); ++i) {
+		vector<matrix::_Type> cur_column = b.get_column(i);
+		vector<matrix::_Type> y = straight_substitution(L, cur_column);
+		vector<matrix::_Type> x = back_substitution(U, y);
+		for (int j = 0; j < X.rows(); ++j) {
+			X[j][i] = x[j];
+		}
+	}	
+	return X;
 }
 
 matrix calculation::inverse_matrix::LU_method(const matrix& A) {
 	//if (A.rows != A.columns) {
 	//
 	//}
-	matrix A_inverse(A.rows, A.columns);
-	for (int i = 0; i < A.rows; ++i) {
-		matrix b(A.rows, 1);
-		b[i][0] = 1;
-		matrix new_column = calculation::SLAE::LU_method(A, b);
-		for (int j = 0; j < A.columns; ++j) {
-			A_inverse[j][i] = new_column[j][0];
-		}
+	matrix E(A.rows(), A.columns());
+	for (int i = 0; i < A.rows(); ++i) {
+		E[i][i] = 1;
 	}
+	matrix A_inverse = SLAE::LU_method(A, E);
 	return A_inverse;
 }
