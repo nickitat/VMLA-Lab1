@@ -20,9 +20,13 @@ int main() {
 	freopen("input.in", "r", stdin);
 	freopen("output.out", "w", stdout);
 
-	assert(50 == test_SLAE::test(50, 1e-5));
+	const int num_of_tests = 500;
 
-	assert(50 == test_inverse_matrix::test(50, 1e-5));
+	int test_slae = test_SLAE::test(num_of_tests);
+
+	int test_inv = test_inverse_matrix::test(num_of_tests);
+
+	cout << test_slae << " " << test_inv << endl;
 
 	/*srand(time(nullptr));
 	matrix A(4, 4), b(4, 1);

@@ -21,6 +21,9 @@ public:
 	matrix operator*(const matrix& other);
 	matrix operator*(const double alpha);
 
+	bool operator==(matrix& other);
+	bool operator==(const matrix& other);
+
 	matrix LU_decomposition() const;
 
 	//private:

@@ -1,4 +1,7 @@
 #include "matrix.h"
+#include <cassert>
+
+#include <iostream>
 
 matrix::matrix(int rows, int columns)
 	: rows(rows), columns(columns)
@@ -76,6 +79,47 @@ matrix matrix::operator*(const matrix& other) {
 		}
 	}
 	return Res;
+}
+
+bool matrix::operator==(matrix& other) {
+	if (rows != other.rows || columns != other.columns) {
+		return false;
+	}
+	const long double precission = 1e-5;
+	assert(rows > 0);
+	assert(columns > 0);
+	assert(other.rows > 0);
+	assert(other.columns > 0);
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < columns; ++j) {
+			//std::cout << "fuck!!!!!!!!!!!" << std::endl;
+			if (fabsl(data[i][j] - other.data[i][j]) > precission) {
+				return false;
+			}
+		}
+	}
+	//std::cout << 1 << std::endl;
+	return true;
+}
+
+bool matrix::operator==(const matrix& other) {
+	if (rows != other.rows || columns != other.columns) {
+		return false;
+	}
+	const long double precission = 1e-5;
+	assert(rows > 0);
+	assert(columns > 0);
+	assert(other.rows > 0);
+	assert(other.columns > 0);
+	for (int i = 0; i < rows; ++i) {
+		for (int j = 0; j < columns; ++j) {
+			if (fabsl(data[i][j] - other.data[i][j]) > precission) {
+				return false;
+			}
+		}
+	}
+	//std::cout << 1 << std::endl;
+	return true;
 }
 
 matrix matrix::LU_decomposition() const {
