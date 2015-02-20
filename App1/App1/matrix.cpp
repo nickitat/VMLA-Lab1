@@ -6,7 +6,7 @@
 matrix::matrix(int m_rows, int m_columns)
 	: m_rows(m_rows), m_columns(m_columns)
 {
-	data.assign(m_rows, vector<_Type>(m_columns));
+	data.assign(m_rows, vector<_Type>(m_columns, 0));
 }
 
 matrix::matrix(const matrix& other)
@@ -43,6 +43,16 @@ vector<matrix::_Type> matrix::get_column(size_t j) const {
 	return ret;
 }
 
+matrix matrix::transpos() const {
+	matrix AT(m_columns, m_rows);
+	for (int i = 0; i < AT.rows(); ++i) {
+		for (int j = 0; j < AT.columns(); ++j) {
+			AT[i][j] = data[j][i];
+		}
+	}
+	return AT;
+}
+
 void matrix::operator=(const matrix& other) {
 	m_rows = other.m_rows;
 	m_columns = other.m_columns;
@@ -73,11 +83,24 @@ matrix matrix::operator+(const matrix& other) {
 	return Res;
 }
 
-matrix matrix::operator*(const double alpha) {
+matrix matrix::operator-(const matrix& other) {
+	//if (m_rows != other.m_rows || m_columns != other.m_columns) {
+	//
+	//}
 	matrix Res(m_rows, m_columns);
 	for (size_t i = 0; i < m_rows; ++i) {
 		for (size_t j = 0; j < m_columns; ++j) {
-			Res[i][j] *= alpha;
+			Res[i][j] = data[i][j] - other.data[i][j];
+		}
+	}
+	return Res;
+}
+
+matrix matrix::operator*(const long double alpha) {
+	matrix Res(m_rows, m_columns);
+	for (size_t i = 0; i < m_rows; ++i) {
+		for (size_t j = 0; j < m_columns; ++j) {
+			Res[i][j] = data[i][j] * alpha;
 		}
 	}
 	return Res;
@@ -163,4 +186,93 @@ matrix matrix::LU_decomposition() const {
 		}
 	}
 	return L;
+}
+
+#include <numeric>
+
+void matrix::QR_decomposition(matrix& Q, matrix& R) const {
+	//if (m_rows != m_columns) {
+	//
+	//}
+	size_t n = m_rows;
+	matrix E = matrix(n, n);
+	Q = matrix(n, n);
+	R = *this;
+	for (int i = 0; i < n; ++i) {
+		E[i][i] = 1;
+		Q[i][i] = 1;
+	}
+	for (int i = 0; i < n - 1; ++i) {
+		matrix Hi(n, n);
+		vector<_Type> a = R.get_column(i);
+		long double check = 0;
+		for (int j = i + 1; j < n; ++j) {
+			check += a[j] * a[j];
+		}
+		if (check != 0) {
+			long double a_norm = 0;
+			for (int j = i; j < n; ++j) {
+				a_norm += a[j] * a[j];
+			}
+			a_norm = sqrtl(a_norm);
+			if (a[i] >= 0) {
+				a[i] += a_norm;
+			}
+			else {
+				a[i] -= a_norm;
+			}
+			matrix u(n, 1);
+			for (int j = 0; j < n; ++j) {
+				if (j < i) {
+					u[j][0] = 0;
+				}
+				else {
+					u[j][0] = a[j];
+				}
+			}
+			long double u_norm = 0;
+			for (int j = i; j < n; ++j) {
+				u_norm += u[j][0] * u[j][0];
+			}
+			u_norm = sqrtl(u_norm);
+			for (int j = i; j < n; ++j) {
+				u[j][0] /= u_norm;
+			}
+			/*matrix UUT = u * u.transpos();
+			UUT = UUT * 2;
+			Hi = E - UUT;*/
+			vector<_Type> utR(n, 0);
+			for (int j = 0; j < n; ++j) {
+				for (int k = 0; k < n; ++k) {
+					utR[j] += u[k][0] * R[k][j];
+				}
+			}
+			//matrix UUT(n, n);
+			for (int j = 0; j < n; ++j) {
+				for (int k = 0; k < n; ++k) {
+					R[j][k] -= 2 * u[j][0] * utR[k];
+				}
+			}
+			//R = R - UUT;
+			vector<_Type> utQ(n, 0);
+			for (int j = 0; j < n; ++j) {
+				for (int k = 0; k < n; ++k) {
+					utQ[j] += u[k][0] * Q[k][j];
+				}
+			}
+			//matrix UUQ(n, n);
+			for (int j = 0; j < n; ++j) {
+				for (int k = 0; k < n; ++k) {
+					Q[j][k] -= 2 * u[j][0] * utQ[k];
+				}
+			}
+			//Q = Q.transpos();
+			//Q = Q - UUQ;
+			//Q = Q.transpos();
+		}
+		// for what I`m doing that ?)
+		//R = Hi * R;
+		//Q = Q * Hi.transpos();
+	}
+	Q = Q.transpos();
 }

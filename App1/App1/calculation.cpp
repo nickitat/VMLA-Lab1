@@ -1,5 +1,7 @@
 #include "calculation.h"
 
+#include <iostream>
+
 vector<matrix::_Type> calculation::SLAE::back_substitution(const matrix& U, const vector<matrix::_Type>& b) {
 	vector<matrix::_Type> x(U.columns());
 	for (int i = x.size() - 1; i >= 0; --i) {
@@ -51,6 +53,33 @@ matrix calculation::SLAE::LU_method(const matrix& A, const matrix& b) {
 	return X;
 }
 
+matrix calculation::SLAE::QR_method(const matrix& A, const matrix& b) {
+	//if (A.rows != A.columns) {
+	//
+	//}
+	int n = A.rows();
+	matrix Q(n, n), R(n, n);
+	A.QR_decomposition(Q, R);
+	matrix X(A.columns(), b.columns());
+	matrix QTb = Q.transpos() * b;
+	for (int i = 0; i < b.columns(); ++i) {
+		/*vector<matrix::_Type> cur_column = b.get_column(i);
+		vector<matrix::_Type> y(n, 0);
+		for (int j = 0; j < n; ++j) {
+			for (int k = 0; k < n; ++k) {
+				y[j] -= Q[k][j] * cur_column[k];
+			}
+		}
+		vector<matrix::_Type> x = back_substitution(R, y);*/
+		vector<matrix::_Type> cur_column = QTb.get_column(i);
+		vector<matrix::_Type> x = back_substitution(R, cur_column);
+		for (int j = 0; j < X.rows(); ++j) {
+			X[j][i] = x[j];
+		}
+	}
+	return X;
+}
+
 matrix calculation::inverse_matrix::LU_method(const matrix& A) {
 	//if (A.rows != A.columns) {
 	//
@@ -60,5 +89,17 @@ matrix calculation::inverse_matrix::LU_method(const matrix& A) {
 		E[i][i] = 1;
 	}
 	matrix A_inverse = SLAE::LU_method(A, E);
+	return A_inverse;
+}
+
+matrix calculation::inverse_matrix::QR_method(const matrix& A) {
+	//if (A.rows != A.columns) {
+	//
+	//}
+	matrix E(A.rows(), A.columns());
+	for (int i = 0; i < A.rows(); ++i) {
+		E[i][i] = 1;
+	}
+	matrix A_inverse = SLAE::QR_method(A, E);
 	return A_inverse;
 }
