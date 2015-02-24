@@ -1,7 +1,10 @@
 #include "matrix.h"
+
 #include <cassert>
 #include <ostream>
 #include <iostream>
+#include <numeric>
+#include <exception>
 
 matrix::matrix(int m_rows, int m_columns)
 	: m_rows(m_rows), m_columns(m_columns)
@@ -25,17 +28,27 @@ matrix::~matrix() {
 	data.clear();
 }
 
+inline
+size_t matrix::rows() const {
+	return m_rows;
+}
+
+inline
+size_t matrix::columns() const {
+	return m_columns;
+}
+
 vector<matrix::_Type> matrix::get_row(size_t i) const {
-	//if (i >= m_rows) {
-	//
-	//}
+	if (i >= m_rows) {
+		throw std::logic_error("\tget_row(size_t i) : invalid index.");
+	}
 	return data[i];
 }
 
 vector<matrix::_Type> matrix::get_column(size_t j) const {
-	//if (j >= m_columns) {
-	//
-	//}
+	if (j >= m_columns) {
+		throw std::logic_error("\tget_column(size_t i) : invalid index.");
+	}
 	vector<_Type> ret(m_rows);
 	for (int i = 0; i < m_rows; ++i) {
 		ret[i] = data[i][j];
@@ -70,10 +83,10 @@ const vector<matrix::_Type>& matrix::operator[](size_t i) const {
 	return data[i];
 }
 
-matrix matrix::operator+(const matrix& other) {
-	//if (m_rows != other.m_rows || m_columns != other.m_columns) {
-	//
-	//}
+matrix matrix::operator+(const matrix& other) const {
+	if (m_rows != other.m_rows || m_columns != other.m_columns) {
+		throw std::logic_error("\tmatrix::operator+(const matrix& other) : matrices have a different size.");
+	}
 	matrix Res(m_rows, m_columns);
 	for (size_t i = 0; i < m_rows; ++i) {
 		for (size_t j = 0; j < m_columns; ++j) {
@@ -83,10 +96,10 @@ matrix matrix::operator+(const matrix& other) {
 	return Res;
 }
 
-matrix matrix::operator-(const matrix& other) {
-	//if (m_rows != other.m_rows || m_columns != other.m_columns) {
-	//
-	//}
+matrix matrix::operator-(const matrix& other) const {
+	if (m_rows != other.m_rows || m_columns != other.m_columns) {
+		throw std::logic_error("\tmatrix::operator-(const matrix& other) : matrices have a different size.");
+	}
 	matrix Res(m_rows, m_columns);
 	for (size_t i = 0; i < m_rows; ++i) {
 		for (size_t j = 0; j < m_columns; ++j) {
@@ -96,7 +109,7 @@ matrix matrix::operator-(const matrix& other) {
 	return Res;
 }
 
-matrix matrix::operator*(const long double alpha) {
+matrix matrix::operator*(const long double alpha) const {
 	matrix Res(m_rows, m_columns);
 	for (size_t i = 0; i < m_rows; ++i) {
 		for (size_t j = 0; j < m_columns; ++j) {
@@ -106,10 +119,10 @@ matrix matrix::operator*(const long double alpha) {
 	return Res;
 }
 
-matrix matrix::operator*(const matrix& other) {
-	//if (m_columns != other.m_rows) {
-	//
-	//}
+matrix matrix::operator*(const matrix& other) const {
+	if (m_columns != other.m_rows) {
+		throw std::logic_error("\tmatrix::operator*(const matrix& other) : matrices have an incompatible size.");
+	}
 	matrix Res(m_rows, other.m_columns);
 	for (size_t i = 0; i < Res.m_rows; ++i) {
 		for (size_t j = 0; j < Res.m_columns; ++j) {
@@ -147,11 +160,10 @@ std::ostream& operator<<(std::ostream& os, const matrix& A) {
 	return os;
 }
 
-
 matrix matrix::LU_decomposition() const {
-	//if (m_rows != m_columns) {
-	//
-	//}
+	if (m_rows != m_columns) {
+		throw std::logic_error("\tmatrix::LU_decomposition() : required quadratic matrix.");
+	}
 	size_t n = m_rows;
 	matrix L(n, n), U(n, n);
 	for (int i = 0; i < n; ++i) {
@@ -188,12 +200,10 @@ matrix matrix::LU_decomposition() const {
 	return L;
 }
 
-#include <numeric>
-
 void matrix::QR_decomposition(matrix& Q, matrix& R) const {
-	//if (m_rows != m_columns) {
-	//
-	//}
+	if (m_rows != m_columns) {
+		throw std::logic_error("\tmatrix::QR_decomposition() : required quadratic matrix.");
+	}
 	size_t n = m_rows;
 	matrix E = matrix(n, n);
 	Q = matrix(n, n);
@@ -203,76 +213,58 @@ void matrix::QR_decomposition(matrix& Q, matrix& R) const {
 		Q[i][i] = 1;
 	}
 	for (int i = 0; i < n - 1; ++i) {
-		matrix Hi(n, n);
-		vector<_Type> a = R.get_column(i);
-		long double check = 0;
+		vector<_Type> cur_column = R.get_column(i);
+		long double nonzero_tail = 0;
 		for (int j = i + 1; j < n; ++j) {
-			check += a[j] * a[j];
+			nonzero_tail += cur_column[j] * cur_column[j];
 		}
-		if (check != 0) {
-			long double a_norm = 0;
+		if (nonzero_tail) {
+			long double cur_column_norm = 0;
 			for (int j = i; j < n; ++j) {
-				a_norm += a[j] * a[j];
+				cur_column_norm += cur_column[j] * cur_column[j];
 			}
-			a_norm = sqrtl(a_norm);
-			if (a[i] >= 0) {
-				a[i] += a_norm;
+			cur_column_norm = sqrtl(cur_column_norm);
+			if (cur_column[i] >= 0) {
+				cur_column[i] += cur_column_norm;
 			}
 			else {
-				a[i] -= a_norm;
+				cur_column[i] -= cur_column_norm;
 			}
-			matrix u(n, 1);
-			for (int j = 0; j < n; ++j) {
-				if (j < i) {
-					u[j][0] = 0;
-				}
-				else {
-					u[j][0] = a[j];
-				}
+			vector<matrix::_Type> u(n);
+			for (int j = i; j < n; ++j) {
+				u[j] = cur_column[j];
 			}
 			long double u_norm = 0;
 			for (int j = i; j < n; ++j) {
-				u_norm += u[j][0] * u[j][0];
+				u_norm += u[j] * u[j];
 			}
 			u_norm = sqrtl(u_norm);
 			for (int j = i; j < n; ++j) {
-				u[j][0] /= u_norm;
+				u[j] /= u_norm;
 			}
-			/*matrix UUT = u * u.transpos();
-			UUT = UUT * 2;
-			Hi = E - UUT;*/
 			vector<_Type> utR(n, 0);
 			for (int j = 0; j < n; ++j) {
 				for (int k = 0; k < n; ++k) {
-					utR[j] += u[k][0] * R[k][j];
+					utR[j] += u[k] * R[k][j];
 				}
 			}
-			//matrix UUT(n, n);
 			for (int j = 0; j < n; ++j) {
 				for (int k = 0; k < n; ++k) {
-					R[j][k] -= 2 * u[j][0] * utR[k];
+					R[j][k] -= 2 * u[j] * utR[k];
 				}
 			}
-			//R = R - UUT;
 			vector<_Type> utQ(n, 0);
 			for (int j = 0; j < n; ++j) {
 				for (int k = 0; k < n; ++k) {
-					utQ[j] += u[k][0] * Q[k][j];
+					utQ[j] += u[k] * Q[k][j];
 				}
 			}
-			//matrix UUQ(n, n);
 			for (int j = 0; j < n; ++j) {
 				for (int k = 0; k < n; ++k) {
-					Q[j][k] -= 2 * u[j][0] * utQ[k];
+					Q[j][k] -= 2 * u[j] * utQ[k];
 				}
 			}
-			//Q = Q.transpos();
-			//Q = Q - UUQ;
-			//Q = Q.transpos();
 		}
-		// for what I`m doing that ?)
-		//R = Hi * R;
-		//Q = Q * Hi.transpos();
 	}
 	Q = Q.transpos();
 }
