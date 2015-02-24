@@ -3,25 +3,29 @@
 
 #include "matrix.h"
 
-class calculation {
-public:
+namespace Garbage {
 
-	class SLAE {
+	class calculation {
 	public:
 
-		static vector<matrix::_Type> back_substitution(const matrix& U, const vector<matrix::_Type>& b);
-		static vector<matrix::_Type> straight_substitution(const matrix& L, const vector<matrix::_Type>& b);
-		static matrix LU_method(const matrix& A, const matrix& b);
-		static matrix QR_method(const matrix& A, const matrix& b);
+		class SLAE {
+		public:
+
+			static vector<matrix::_Type> back_substitution(const matrix& U, const vector<matrix::_Type>& b);
+			static vector<matrix::_Type> straight_substitution(const matrix& L, const vector<matrix::_Type>& b);
+			static matrix LU_method(const matrix& A, const matrix& b);
+			static matrix QR_method(const matrix& A, const matrix& b);
+		};
+
+		class inverse_matrix {
+		public:
+
+			static matrix LU_method(const matrix& A);
+			static matrix QR_method(const matrix& A);
+		};
+
 	};
 
-	class inverse_matrix {
-	public:
-
-		static matrix LU_method(const matrix& A);
-		static matrix QR_method(const matrix& A);
-	};
-
-};
+}
 
 #endif/*__CALCULATION_H__*/

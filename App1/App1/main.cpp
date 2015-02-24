@@ -9,12 +9,13 @@
 #include <utility>
 #include <vector>
 
-using namespace std;
-
 #include "matrix.h"
 #include "calculation.h"
 #include "SLAE_solve.h"
 #include "inverse_matrix.h"
+
+using namespace std;
+using namespace Garbage;
 
 int main() {
 	freopen("input.in", "r", stdin);

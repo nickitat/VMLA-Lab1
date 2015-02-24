@@ -5,42 +5,46 @@
 #include <vector>
 using std::vector;
 
-class matrix {
-public:
+namespace Garbage {
 
-	typedef long double _Type;
+	class matrix {
+	public:
 
-	matrix(int rows, int columns);
-	matrix(const matrix& other);
-	~matrix();
+		typedef long double _Type;
 
-	size_t rows() const;
-	size_t columns() const;
+		matrix(int rows, int columns);
+		matrix(const matrix& other);
+		~matrix();
 
-	vector<_Type> get_row(size_t i) const;
-	vector<_Type> get_column(size_t j) const;
+		size_t rows() const;
+		size_t columns() const;
 
-	matrix transpos() const;
+		vector<_Type> get_row(size_t i) const;
+		vector<_Type> get_column(size_t j) const;
 
-	matrix LU_decomposition() const;
-	void   QR_decomposition(matrix& Q, matrix& R) const;
+		matrix transpos() const;
 
-	      vector<_Type>& operator[](size_t i);
-	const vector<_Type>& operator[](size_t i) const;
+		matrix LU_decomposition() const;
+		void   QR_decomposition(matrix& Q, matrix& R) const;
 
-	void   operator=(const matrix& other);
-	bool   operator==(const matrix& other);
-	matrix operator+(const matrix& other) const;
-	matrix operator-(const matrix& other) const;
-	matrix operator*(const matrix& other) const;
-	matrix operator*(const long double alpha) const;
+		vector<_Type>& operator[](size_t i);
+		const vector<_Type>& operator[](size_t i) const;
 
-	friend std::ostream& operator<<(std::ostream& os, const matrix& A);
+		void   operator=(const matrix& other);
+		bool   operator==(const matrix& other);
+		matrix operator+(const matrix& other) const;
+		matrix operator-(const matrix& other) const;
+		matrix operator*(const matrix& other) const;
+		matrix operator*(const long double alpha) const;
 
-private:
+		friend std::ostream& operator<<(std::ostream& os, const matrix& A);
 
-	size_t m_columns, m_rows;
-	vector<vector<_Type>> data;
-};
+	private:
+
+		size_t m_columns, m_rows;
+		vector<vector<_Type>> data;
+	};
+
+}
 
 #endif/*__MATRIX_H__*/
